@@ -81,6 +81,17 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('colors.index')" :active="request()->routeIs('colors.*')">Colors</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('materials.index')" :active="request()->routeIs('materials.*')">Materials</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('brands.index')" :active="request()->routeIs('brands.*')">Brands</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('locations.index')" :active="request()->routeIs('locations.*')">Locations</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('yarns.index')" :active="request()->routeIs('yarns.*')">Yarns</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">Projects</x-responsive-nav-link>
+            @if(auth()->check() && auth()->user()->is_admin)
+                <x-responsive-nav-link :href="route('admin.users.pending')" :active="request()->routeIs('admin.users.*')">
+                    Pending Registrations
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
