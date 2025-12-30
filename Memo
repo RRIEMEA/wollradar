@@ -1,0 +1,18 @@
+$user = \App\Models\User::where('email', 'rainer@richter-web.com')->first();
+$user->is_admin = true;
+$user->is_approved = true;
+$user->approved_at = now();
+$user->save();
+
+
+use App\Models\User;
+
+User::where('email', 'rainer@richter-web.com')->update([
+    'is_admin' => 1,
+    'is_approved' => 1,
+    'status' => 'APPROVED',
+    'approved_at' => now(),
+    'approved_by' => 2,
+]);
+
+User::where('email', 'rainer@richter-web.com')->first()->only(['status','is_admin','is_approved','approved_at','approved_by','updated_at']);

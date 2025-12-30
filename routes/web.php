@@ -7,6 +7,7 @@ use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\YarnController;
+use App\Http\Controllers\Admin\UserApprovalController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -21,6 +22,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/users/pending', [AdminUserApprovalController::class, 'index'])->name('users.pending');
+    Route::patch('/users/{user}/approve', [AdminUserApprovalController::class, 'approve'])->name('users.approve');
+
+    Route::get('/users/pending', [UserApprovalController::class, 'index'])->name('users.pending');
+    Route::patch('/users/{user}/approve', [UserApprovalController::class, 'approve'])->name('users.approve');
+    Route::patch('/users/{user}/reject',  [UserApprovalController::class, 'reject'])->name('users.reject');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

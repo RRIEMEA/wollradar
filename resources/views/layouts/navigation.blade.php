@@ -21,6 +21,11 @@
                     <x-nav-link :href="route('locations.index')" :active="request()->routeIs('locations.*')">Locations</x-nav-link>
                     <x-nav-link :href="route('yarns.index')" :active="request()->routeIs('yarns.*')">Yarns</x-nav-link>
                     <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">Projects</x-nav-link>
+                    @if(auth()->check() && auth()->user()->is_admin)
+                        <x-nav-link :href="route('admin.users.pending')" :active="request()->routeIs('admin.users.*')">
+                            Pending Registrations
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
