@@ -12,14 +12,7 @@ class UserApprovalController extends Controller
 {
     public function index(): View
     {
-        $pendingUsers = User::query()
-            ->where('is_approved', false)
-            ->orderByDesc('created_at')
-            ->get(['id', 'name', 'email', 'status', 'created_at', 'is_admin', 'is_approved']);
-
-        return view('admin.users.pending', [
-            'pendingUsers' => $pendingUsers,
-        ]);
+        return $this->pending();
     }
 
     public function approve(Request $request, User $user): RedirectResponse
@@ -64,4 +57,43 @@ class UserApprovalController extends Controller
             ->route('admin.users.pending')
             ->with('status', 'User wurde abgelehnt.');
     }
+
+    public function makeAdmin(User $user): RedirectResponse
+    {
+        $user->is_admin = true;
+        $user->save();
+
+        return back()->with('status', "User is now admin: {$user->email}");
+    }
+
+    public function removeAdmin(User $user): RedirectResponse
+    {
+        // Safety: prevent self-demotion
+        if (auth()->id() === $user->id) {
+            return back()->with('status', 'You cannot remove your own admin rights.');
+        }
+
+        $user->is_admin = false;
+        $user->save();
+
+        return back()->with('status', "Admin rights removed: {$user->email}");
+    }
+
+    public function pending(): View
+    {
+        $pendingUsers = User::query()
+            ->where(function ($q) {
+                $q->whereNull('is_approved')->orWhere('is_approved', false);
+            })
+            ->orderByDesc('created_at')
+            ->get(['id','name','email','status','created_at','is_admin','is_approved']);
+
+        $approvedUsers = User::query()
+            ->where('is_approved', true)
+            ->orderByDesc('created_at')
+            ->get(['id','name','email','status','created_at','is_admin','is_approved']);
+
+        return view('admin.users.pending', compact('pendingUsers', 'approvedUsers'));
+    }
+
 }

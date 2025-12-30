@@ -24,14 +24,26 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/users/pending', [AdminUserApprovalController::class, 'index'])->name('users.pending');
-    Route::patch('/users/{user}/approve', [AdminUserApprovalController::class, 'approve'])->name('users.approve');
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
 
-    Route::get('/users/pending', [UserApprovalController::class, 'index'])->name('users.pending');
-    Route::patch('/users/{user}/approve', [UserApprovalController::class, 'approve'])->name('users.approve');
-    Route::patch('/users/{user}/reject',  [UserApprovalController::class, 'reject'])->name('users.reject');
-});
+        Route::get('/users/pending', [UserApprovalController::class, 'pending'])
+            ->name('users.pending');
+
+        Route::patch('/users/{user}/approve', [UserApprovalController::class, 'approve'])
+            ->name('users.approve');
+
+        Route::patch('/users/{user}/reject',  [UserApprovalController::class, 'reject'])
+            ->name('users.reject');
+
+        Route::post('/users/{user}/make-admin', [UserApprovalController::class, 'makeAdmin'])
+            ->name('users.makeAdmin');
+
+        Route::post('/users/{user}/remove-admin', [UserApprovalController::class, 'removeAdmin'])
+            ->name('users.removeAdmin');
+    });
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Meta lists

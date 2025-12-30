@@ -23,6 +23,7 @@ class DemoUserSeeder extends Seeder
         // Your custom columns exist already (confirmed via getColumnListing)
         $user->status = $user->status ?? 'APPROVED'; // or 'PENDING' if you prefer
         $user->is_admin = true;
+        $user->is_approved = true;
 
         // Convenience for Breeze: treat as verified
         $user->email_verified_at = $user->email_verified_at ?? now();
