@@ -16,3 +16,22 @@ User::where('email', 'rainer@richter-web.com')->update([
 ]);
 
 User::where('email', 'rainer@richter-web.com')->first()->only(['status','is_admin','is_approved','approved_at','approved_by','updated_at']);
+
+
+
+mkdir -p /Users/rainerrichter/VsLocal/_releases
+
+cd /Users/rainerrichter/VsLocal/wollradar
+COPYFILE_DISABLE=1 tar -czf /Users/rainerrichter/VsLocal/_releases/wollradar-release-2025-12-30_03.tgz \
+  --exclude=.git \
+  --exclude=node_modules \
+  --exclude=.env \
+  --exclude=storage/logs \
+  --exclude=bootstrap/cache/*.php \
+  .
+scp /Users/rainerrichter/VsLocal/_releases/wollradar-release-2025-12-30_03.tgz \
+stu534020136@57633305.ssh.w1.strato.hosting:~/apps/wollradar/incoming_upload/
+
+~/apps/wollradar/deploy_release.sh \
+~/apps/wollradar/incoming_upload/wollradar-release-2025-12-30_03.tgz \
+2025-12-30_03
