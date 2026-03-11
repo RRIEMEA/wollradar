@@ -1,59 +1,63 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Colors</h2>
+        <div>
+            <p class="text-sm font-medium uppercase tracking-[0.24em] text-amber-700">Meta Data</p>
+            <h2 class="mt-2 text-3xl font-semibold tracking-tight text-stone-950">Colors</h2>
+        </div>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-6">
-
-            @if (session('status'))
-                <div class="p-4 rounded bg-green-50 text-green-800 border border-green-200">
-                    {{ session('status') }}
-                </div>
-            @endif
-
-            <div class="bg-white shadow sm:rounded-lg p-6">
-                <form method="POST" action="{{ route('colors.store') }}" class="flex gap-3 items-end">
-                    @csrf
-                    <div class="flex-1">
-                        <label class="block text-sm font-medium text-gray-700">New Color</label>
-                        <input name="name" value="{{ old('name') }}"
-                               class="mt-1 block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                               placeholder="e.g. Rot" />
-                        @error('name')
-                            <div class="text-sm text-red-600 mt-1">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <button class="px-4 py-2 rounded bg-indigo-600 text-gray-700 hover:bg-indigo-700">
-                        Add
-                    </button>
-                </form>
-            </div>
-
-            <div class="bg-white shadow sm:rounded-lg p-6">
-                <div class="text-sm text-gray-600 mb-3">Your Colors</div>
-
-                @if($colors->isEmpty())
-                    <div class="text-gray-500">No colors yet.</div>
-                @else
-                    <ul class="divide-y">
-                        @foreach($colors as $color)
-                            <li class="py-3 flex items-center justify-between">
-                                <div class="font-medium text-gray-900">{{ $color->name }}</div>
-                                <form method="POST" action="{{ route('colors.destroy', $color) }}"
-                                      onsubmit="return confirm('Delete {{ $color->name }}?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="text-sm text-red-600 hover:text-red-800">
-                                        Delete
-                                    </button>
-                                </form>
-                            </li>
-                        @endforeach
-                    </ul>
+    <div class="app-section max-w-4xl">
+        @if (session('status'))
+            <div class="rounded-3xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+                {{ session('status') }}
+                @if(session('status') === 'Color saved.')
+                    <span class="hidden" data-clear-draft-key="color-create"></span>
                 @endif
             </div>
+        @endif
 
+        <div class="app-card">
+            <form method="POST" action="{{ route('colors.store') }}" class="space-y-4" data-draft-key="color-create">
+                @csrf
+                <div>
+                    <label class="block text-sm font-medium text-stone-700">New Color</label>
+                    <input name="name" value="{{ old('name') }}"
+                           class="mt-1 block w-full"
+                           placeholder="e.g. Rot" />
+                    @error('name')
+                        <div class="text-sm text-red-600 mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <x-form-draft-tools title="Farb-Entwurf" hint="Neue Farb-Namen werden lokal zwischengespeichert." />
+
+                <button class="app-button w-full sm:w-auto">Add</button>
+            </form>
+        </div>
+
+        <div class="app-card">
+            <div class="mb-4 text-sm font-medium text-stone-500">Your Colors</div>
+
+            @if($colors->isEmpty())
+                <div class="app-card-muted text-stone-600">No colors yet.</div>
+            @else
+                <ul class="space-y-3">
+                    @foreach($colors as $color)
+                        <li class="flex flex-col gap-3 rounded-3xl border border-stone-200 bg-stone-50/70 p-4 sm:flex-row sm:items-center sm:justify-between">
+                            <div class="font-medium text-stone-900">{{ $color->name }}</div>
+                            <form method="POST" action="{{ route('colors.destroy', $color) }}"
+                                  class="w-full sm:w-auto"
+                                  onsubmit="return confirm('Delete {{ $color->name }}?')">
+                                @csrf
+                                @method('DELETE')
+                                <button class="app-button-danger w-full sm:w-auto">
+                                    Delete
+                                </button>
+                            </form>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
     </div>
 </x-app-layout>

@@ -3,6 +3,13 @@
         {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
     </div>
 
+    @if (app()->environment('local') && config('mail.default') === 'log')
+        <div class="mb-4 rounded-3xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            Lokaler Testmodus: E-Mails werden aktuell nicht wirklich versendet.
+            Der Reset-Link wird in <code class="font-mono">storage/logs/laravel.log</code> geschrieben, weil <code class="font-mono">MAIL_MAILER=log</code> aktiv ist.
+        </div>
+    @endif
+
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 

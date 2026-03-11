@@ -1,5 +1,12 @@
 <?php
 
+use App\Models\Brand;
+use App\Models\Color;
+use App\Models\Location;
+use App\Models\Material;
+use App\Models\Project;
+use App\Models\User;
+use App\Models\Yarn;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ColorController;
@@ -15,7 +22,53 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $userId = auth()->id();
+
+    return view('dashboard', [
+        'stats' => [
+            [
+                'label' => 'Yarns',
+                'value' => Yarn::query()->where('user_id', $userId)->count(),
+                'hint' => 'Knäuel und Restbestände',
+                'route' => route('yarns.index'),
+            ],
+            [
+                'label' => 'Projects',
+                'value' => Project::query()->where('user_id', $userId)->count(),
+                'hint' => 'Aktive und geplante Arbeiten',
+                'route' => route('projects.index'),
+            ],
+            [
+                'label' => 'Colors',
+                'value' => Color::query()->where('user_id', $userId)->count(),
+                'hint' => 'Farben für schnelle Zuordnung',
+                'route' => route('colors.index'),
+            ],
+            [
+                'label' => 'Materials',
+                'value' => Material::query()->where('user_id', $userId)->count(),
+                'hint' => 'Merino, Baumwolle und mehr',
+                'route' => route('materials.index'),
+            ],
+            [
+                'label' => 'Brands',
+                'value' => Brand::query()->where('user_id', $userId)->count(),
+                'hint' => 'Hersteller und Serien',
+                'route' => route('brands.index'),
+            ],
+            [
+                'label' => 'Locations',
+                'value' => Location::query()->where('user_id', $userId)->count(),
+                'hint' => 'Schrank, Box oder Regal',
+                'route' => route('locations.index'),
+            ],
+        ],
+        'pendingApprovals' => auth()->user()->is_admin
+            ? User::query()->where(function ($query) {
+                $query->whereNull('is_approved')->orWhere('is_approved', false);
+            })->count()
+            : 0,
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -72,7 +125,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
     // Yarns
-    Route::resource('yarns', YarnController::class);
+    Route::resource('yarns', YarnController::class)->except('show');
 });
 
 require __DIR__ . '/auth.php';

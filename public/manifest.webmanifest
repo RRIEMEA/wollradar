@@ -1,0 +1,31 @@
+{
+    "name": "Wollradar",
+    "short_name": "Wollradar",
+    "start_url": "/dashboard",
+    "display": "standalone",
+    "display_override": ["window-controls-overlay", "standalone"],
+    "scope": "/",
+    "description": "Woll- und Garnbestand mobil verwalten.",
+    "lang": "de-DE",
+    "orientation": "portrait",
+    "background_color": "#f5f5f4",
+    "theme_color": "#fbbf24",
+    "icons": [
+        {
+            "src": "/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
