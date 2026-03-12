@@ -26,9 +26,24 @@
             .welcome-shell {
                 min-height: 100vh;
                 display: flex;
+                flex-direction: column;
                 align-items: center;
                 justify-content: center;
+                gap: 1.5rem;
                 padding: 2rem 1.25rem;
+            }
+
+            .welcome-topmark {
+                width: min(100%, 70rem);
+                display: flex;
+                justify-content: center;
+            }
+
+            .welcome-topmark img {
+                display: block;
+                width: min(100%, 32rem);
+                height: auto;
+                filter: drop-shadow(0 20px 32px rgba(28, 25, 23, 0.18));
             }
 
             .welcome-card {
@@ -201,6 +216,10 @@
     </head>
     <body>
         <main class="welcome-shell">
+            <div class="welcome-topmark">
+                <x-application-wordmark />
+            </div>
+
             <section class="welcome-card">
                 <div class="welcome-copy">
                     <p class="eyebrow">Wollradar</p>
