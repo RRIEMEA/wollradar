@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 class BrandController extends Controller
 {
@@ -21,6 +22,10 @@ class BrandController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->boolean('quick_add')) {
+            return $this->storeQuickAdd($request);
+        }
+
         $userId = auth()->id();
 
         $data = $request->validate([
@@ -38,7 +43,7 @@ class BrandController extends Controller
         // Optional: Leere Strings nach trim verhindern
         if ($name === '') {
             return back()
-                ->withErrors(['name' => 'Name is required.'])
+                ->withErrors(['name' => 'Name ist erforderlich.'])
                 ->withInput();
         }
 
@@ -50,7 +55,7 @@ class BrandController extends Controller
             'name'    => $name,
         ]);
 
-        return redirect()->route('brands.index')->with('status', 'Brand saved.');
+        return redirect()->route('brands.index')->with('status', 'Marke gespeichert.');
     }
 
     public function destroy(Brand $brand)
@@ -60,6 +65,43 @@ class BrandController extends Controller
 
         $brand->delete();
 
-        return redirect()->route('brands.index')->with('status', 'Brand deleted.');
+        return redirect()->route('brands.index')->with('status', 'Marke gelöscht.');
+    }
+
+    private function storeQuickAdd(Request $request)
+    {
+        $userId = auth()->id();
+
+        $validator = Validator::make($request->all(), [
+            'quick_brand_name' => [
+                'required',
+                'string',
+                'max:80',
+                Rule::unique('brands', 'name')->where('user_id', $userId),
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return $this->quickCreateValidationRedirect(
+                $request,
+                'brands.index',
+                $validator,
+                'quickAddBrand',
+                'quick-add-brand'
+            );
+        }
+
+        $brand = Brand::query()->create([
+            'user_id' => $userId,
+            'name' => trim((string) $request->input('quick_brand_name')),
+        ]);
+
+        return $this->quickCreateSuccessRedirect(
+            $request,
+            'brands.index',
+            'Marke angelegt.',
+            'brand_id',
+            $brand->id
+        );
     }
 }

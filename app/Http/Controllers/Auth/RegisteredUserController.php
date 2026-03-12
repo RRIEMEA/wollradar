@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\AdminNewUserPendingApproval;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
@@ -42,6 +42,12 @@ class RegisteredUserController extends Controller
             'status' => 'PENDING',
             'is_approved' => false,
         ]);
+
+        User::query()
+            ->where('is_admin', true)
+            ->where('is_approved', true)
+            ->get()
+            ->each(fn (User $admin) => $admin->notify(new AdminNewUserPendingApproval($user)));
 
         event(new Registered($user));
 

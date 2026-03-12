@@ -22,6 +22,7 @@ class Yarn extends Model
         'length_m',
         'weight_g',
         'notes',
+        'is_finished',
         'photo_path'
     ];
 
@@ -30,6 +31,7 @@ class Yarn extends Model
         'quantity' => 'decimal:2',
         'length_m' => 'decimal:2',
         'weight_g' => 'decimal:2',
+        'is_finished' => 'boolean',
     ];
 
     public function user(): BelongsTo

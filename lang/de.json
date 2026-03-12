@@ -1,0 +1,20 @@
+{
+    "Name": "Name",
+    "Email": "E-Mail",
+    "Password": "Passwort",
+    "Confirm Password": "Passwort bestätigen",
+    "Current Password": "Aktuelles Passwort",
+    "New Password": "Neues Passwort",
+    "Save": "Speichern",
+    "Saved.": "Gespeichert.",
+    "Cancel": "Abbrechen",
+    "Profile": "Profil",
+    "Profile Information": "Profilinformationen",
+    "Update Password": "Passwort ändern",
+    "Delete Account": "Konto löschen",
+    "Remember me": "Angemeldet bleiben",
+    "Forgot your password?": "Passwort vergessen?",
+    "Log in": "Anmelden",
+    "Log Out": "Abmelden",
+    "Register": "Registrieren"
+}

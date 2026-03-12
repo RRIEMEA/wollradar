@@ -12,7 +12,7 @@
         <link rel="apple-touch-icon" href="{{ asset('icons/apple-touch-icon.png') }}">
         <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'Wollradar') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

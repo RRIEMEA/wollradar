@@ -125,6 +125,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
     // Yarns
+    Route::patch('/yarns/{yarn}/quantity', [YarnController::class, 'adjustQuantity'])->name('yarns.quantity.adjust');
+    Route::patch('/yarns/{yarn}/finish-project', [YarnController::class, 'finishProject'])->name('yarns.finish-project');
     Route::resource('yarns', YarnController::class)->except('show');
 });
 

@@ -24,7 +24,7 @@
             <div class="min-w-0 flex-1">
                 <div class="flex items-start justify-between gap-3">
                     <div>
-                        <p class="text-sm font-semibold text-stone-950" x-show="$store.pwa.updateAvailable">Update verfugbar</p>
+                        <p class="text-sm font-semibold text-stone-950" x-show="$store.pwa.updateAvailable">Update verfügbar</p>
                         <p class="text-sm font-semibold text-stone-950" x-show="!$store.pwa.updateAvailable">Wollradar als App installieren</p>
                         <p class="mt-1 text-sm leading-6 text-stone-600" x-show="$store.pwa.updateAvailable">
                             Eine neue Version ist geladen. Mit einem kurzen Reload aktivierst du die aktuelle App-Version.

@@ -3,7 +3,7 @@
         <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
                 <p class="text-sm font-medium uppercase tracking-[0.24em] text-amber-700">Admin</p>
-                <h2 class="mt-2 text-3xl font-semibold tracking-tight text-stone-950">User Management</h2>
+                <h2 class="mt-2 text-3xl font-semibold tracking-tight text-stone-950">Benutzerverwaltung</h2>
             </div>
 
             <a href="{{ route('dashboard') }}" class="app-button-secondary w-full sm:w-auto">
@@ -23,7 +23,7 @@
         <div class="space-y-5">
             <div>
                 <div class="mb-3 flex items-center justify-between">
-                    <h3 class="text-lg font-semibold text-stone-800">Pending Registrations</h3>
+                    <h3 class="text-lg font-semibold text-stone-800">Ausstehende Registrierungen</h3>
                 </div>
 
                 @if ($pendingUsers->isEmpty())
@@ -48,7 +48,15 @@
                                     <tr>
                                         <td class="px-4 py-3 text-sm text-gray-900">{{ $u->name }}</td>
                                         <td class="px-4 py-3 text-sm text-gray-700">{{ $u->email }}</td>
-                                        <td class="px-4 py-3 text-sm text-gray-700">{{ $u->status ?? 'PENDING' }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-700">
+                                            {{
+                                                match ($u->status ?? 'PENDING') {
+                                                    'APPROVED' => 'Freigegeben',
+                                                    'REJECTED' => 'Abgelehnt',
+                                                    default => 'Ausstehend',
+                                                }
+                                            }}
+                                        </td>
                                         <td class="px-4 py-3 text-sm text-gray-700">{{ $u->created_at?->format('d.m.Y H:i') }}</td>
                                         <td class="px-4 py-3 text-right">
                                             <div class="flex flex-col justify-end gap-2 sm:flex-row">
@@ -61,7 +69,7 @@
                                                 </form>
 
                                                 <form method="POST" action="{{ route('admin.users.reject', $u) }}"
-                                                      onsubmit="return confirm('Diesen User wirklich ablehnen?');">
+                                                      onsubmit="return confirm('Diesen Benutzer wirklich ablehnen?');">
                                                     @csrf
                                                     @method('PATCH')
                                                     <button type="submit" class="app-button-secondary w-full sm:w-auto">
@@ -79,15 +87,15 @@
                 @endif
             </div>
 
-            {{-- Approved Users --}}
+            {{-- Freigegebene Benutzer --}}
             <div>
                 <div class="mb-3 flex items-center justify-between">
-                    <h3 class="text-lg font-semibold text-stone-800">Approved Users</h3>
+                    <h3 class="text-lg font-semibold text-stone-800">Freigegebene Benutzer</h3>
                 </div>
 
                 @if (empty($approvedUsers) || $approvedUsers->isEmpty())
                     <div class="app-card">
-                        <p class="text-stone-700">Es gibt noch keine freigegebenen User.</p>
+                        <p class="text-stone-700">Es gibt noch keine freigegebenen Benutzer.</p>
                     </div>
                 @else
                     <div class="app-card overflow-hidden !p-0">
@@ -106,21 +114,21 @@
                                     <tr>
                                         <td class="px-4 py-3 text-sm text-gray-900">{{ $u->name }}</td>
                                         <td class="px-4 py-3 text-sm text-gray-700">{{ $u->email }}</td>
-                                        <td class="px-4 py-3 text-sm text-gray-700">{{ $u->is_admin ? 'yes' : 'no' }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-700">{{ $u->is_admin ? 'Ja' : 'Nein' }}</td>
                                         <td class="px-4 py-3 text-right">
                                             <div class="flex flex-col justify-end gap-2 sm:flex-row">
                                                 @if (!$u->is_admin)
                                                     <form method="POST" action="{{ route('admin.users.makeAdmin', $u) }}">
                                                         @csrf
                                                         <button type="submit" class="app-button w-full sm:w-auto">
-                                                            Make Admin
+                                                            Zum Admin machen
                                                         </button>
                                                     </form>
                                                 @else
                                                     <form method="POST" action="{{ route('admin.users.removeAdmin', $u) }}">
                                                         @csrf
                                                         <button type="submit" class="app-button-secondary w-full sm:w-auto">
-                                                            Remove Admin
+                                                            Admin entfernen
                                                         </button>
                                                     </form>
                                                 @endif

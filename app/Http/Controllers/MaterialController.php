@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Material;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Validator;
 
 class MaterialController extends Controller
 {
@@ -20,6 +21,10 @@ class MaterialController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->boolean('quick_add')) {
+            return $this->storeQuickAdd($request);
+        }
+
         $userId = auth()->id();
 
         $data = $request->validate([
@@ -34,7 +39,7 @@ class MaterialController extends Controller
         $name = trim($data['name']);
         if ($name === '') {
             return back()
-                ->withErrors(['name' => 'Name is required.'])
+                ->withErrors(['name' => 'Name ist erforderlich.'])
                 ->withInput();
         }
 
@@ -43,7 +48,7 @@ class MaterialController extends Controller
             'name'    => $name,
         ]);
 
-        return redirect()->route('materials.index')->with('status', 'Material saved.');
+        return redirect()->route('materials.index')->with('status', 'Material gespeichert.');
     }
 
     public function destroy(Material $material)
@@ -52,6 +57,43 @@ class MaterialController extends Controller
 
         $material->delete();
 
-        return redirect()->route('materials.index')->with('status', 'Material deleted.');
+        return redirect()->route('materials.index')->with('status', 'Material gelöscht.');
+    }
+
+    private function storeQuickAdd(Request $request)
+    {
+        $userId = auth()->id();
+
+        $validator = Validator::make($request->all(), [
+            'quick_material_name' => [
+                'required',
+                'string',
+                'max:80',
+                Rule::unique('materials', 'name')->where('user_id', $userId),
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return $this->quickCreateValidationRedirect(
+                $request,
+                'materials.index',
+                $validator,
+                'quickAddMaterial',
+                'quick-add-material'
+            );
+        }
+
+        $material = Material::query()->create([
+            'user_id' => $userId,
+            'name' => trim((string) $request->input('quick_material_name')),
+        ]);
+
+        return $this->quickCreateSuccessRedirect(
+            $request,
+            'materials.index',
+            'Material angelegt.',
+            'material_id',
+            $material->id
+        );
     }
 }

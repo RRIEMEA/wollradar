@@ -1,17 +1,17 @@
 @php
     $links = [
         ['label' => 'Dashboard', 'route' => 'dashboard', 'active' => request()->routeIs('dashboard')],
-        ['label' => 'Yarns', 'route' => 'yarns.index', 'active' => request()->routeIs('yarns.*')],
-        ['label' => 'Projects', 'route' => 'projects.index', 'active' => request()->routeIs('projects.*')],
-        ['label' => 'Colors', 'route' => 'colors.index', 'active' => request()->routeIs('colors.*')],
-        ['label' => 'Materials', 'route' => 'materials.index', 'active' => request()->routeIs('materials.*')],
-        ['label' => 'Brands', 'route' => 'brands.index', 'active' => request()->routeIs('brands.*')],
-        ['label' => 'Locations', 'route' => 'locations.index', 'active' => request()->routeIs('locations.*')],
+        ['label' => 'Garne', 'route' => 'yarns.index', 'active' => request()->routeIs('yarns.*')],
+        ['label' => 'Projekte', 'route' => 'projects.index', 'active' => request()->routeIs('projects.*')],
+        ['label' => 'Farben', 'route' => 'colors.index', 'active' => request()->routeIs('colors.*')],
+        ['label' => 'Materialien', 'route' => 'materials.index', 'active' => request()->routeIs('materials.*')],
+        ['label' => 'Marken', 'route' => 'brands.index', 'active' => request()->routeIs('brands.*')],
+        ['label' => 'Orte', 'route' => 'locations.index', 'active' => request()->routeIs('locations.*')],
     ];
 
     if (auth()->check() && auth()->user()->is_admin) {
         $links[] = [
-            'label' => 'Approvals',
+            'label' => 'Freigaben',
             'route' => 'admin.users.pending',
             'active' => request()->routeIs('admin.users.*'),
         ];
@@ -57,7 +57,7 @@
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="app-button-secondary !min-h-0 !rounded-full !px-4 !py-2">
-                            Log Out
+                            Abmelden
                         </button>
                     </form>
                 </div>
@@ -66,7 +66,7 @@
             <button @click="open = !open"
                     class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-stone-200 bg-white text-stone-700 shadow-sm transition hover:bg-stone-50 lg:hidden"
                     :aria-expanded="open.toString()"
-                    aria-label="Toggle navigation">
+                    aria-label="Navigation umschalten">
                 <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                     <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16" />
                     <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M18 6L6 18" />
@@ -101,13 +101,13 @@
                 </div>
 
                 <a href="{{ route('profile.edit') }}" class="app-button-secondary w-full">
-                    Profile
+                    Profil
                 </a>
 
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="app-button-danger w-full">
-                        Log Out
+                        Abmelden
                     </button>
                 </form>
             </div>

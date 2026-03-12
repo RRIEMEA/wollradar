@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Notifications\UserApprovedNotification;
+use App\Notifications\UserRejectedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -21,7 +23,7 @@ class UserApprovalController extends Controller
         if ($user->is_approved) {
             return redirect()
                 ->route('admin.users.pending')
-                ->with('status', 'User war bereits freigegeben.');
+                ->with('status', 'Benutzer war bereits freigegeben.');
         }
 
         // Wichtig: forceFill umgeht fillable-Probleme sauber
@@ -32,9 +34,11 @@ class UserApprovalController extends Controller
             'approved_by' => $request->user()->id,
         ])->save();
 
+        $user->notify(new UserApprovedNotification());
+
         return redirect()
             ->route('admin.users.pending')
-            ->with('status', 'User wurde freigegeben.');
+            ->with('status', 'Benutzer wurde freigegeben.');
     }
 
     public function reject(Request $request, User $user): RedirectResponse
@@ -42,7 +46,7 @@ class UserApprovalController extends Controller
         if ($user->is_approved) {
             return redirect()
                 ->route('admin.users.pending')
-                ->with('status', 'Freigegebene User können hier nicht abgelehnt werden.');
+                ->with('status', 'Freigegebene Benutzer können hier nicht abgelehnt werden.');
         }
 
         // Variante 1 (empfohlen): User behalten, aber Status setzen
@@ -53,9 +57,11 @@ class UserApprovalController extends Controller
             'approved_by' => null,
         ])->save();
 
+        $user->notify(new UserRejectedNotification());
+
         return redirect()
             ->route('admin.users.pending')
-            ->with('status', 'User wurde abgelehnt.');
+            ->with('status', 'Benutzer wurde abgelehnt.');
     }
 
     public function makeAdmin(User $user): RedirectResponse
@@ -63,20 +69,20 @@ class UserApprovalController extends Controller
         $user->is_admin = true;
         $user->save();
 
-        return back()->with('status', "User is now admin: {$user->email}");
+        return back()->with('status', "Benutzer ist jetzt Admin: {$user->email}");
     }
 
     public function removeAdmin(User $user): RedirectResponse
     {
         // Safety: prevent self-demotion
         if (auth()->id() === $user->id) {
-            return back()->with('status', 'You cannot remove your own admin rights.');
+            return back()->with('status', 'Du kannst dir deine eigenen Admin-Rechte nicht entziehen.');
         }
 
         $user->is_admin = false;
         $user->save();
 
-        return back()->with('status', "Admin rights removed: {$user->email}");
+        return back()->with('status', "Admin-Rechte entfernt: {$user->email}");
     }
 
     public function pending(): View

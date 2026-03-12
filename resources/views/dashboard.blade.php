@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-                <p class="text-sm font-medium uppercase tracking-[0.24em] text-amber-700">Overview</p>
+                <p class="text-sm font-medium uppercase tracking-[0.24em] text-amber-700">Überblick</p>
                 <h2 class="mt-2 text-3xl font-semibold tracking-tight text-stone-950">
                     Dashboard
                 </h2>
@@ -12,7 +12,7 @@
             </div>
 
             <a href="{{ route('yarns.create') }}" class="app-button w-full sm:w-auto">
-                Add Yarn
+                Garn anlegen
             </a>
         </div>
     </x-slot>
@@ -38,18 +38,18 @@
             <div class="app-card">
                 <div class="flex items-center justify-between gap-3">
                     <div>
-                        <h3 class="text-lg font-semibold text-stone-950">Quick Actions</h3>
+                        <h3 class="text-lg font-semibold text-stone-950">Schnellzugriffe</h3>
                         <p class="mt-1 text-sm text-stone-500">Die wichtigsten Eingaben und Stammdaten direkt erreichbar.</p>
                     </div>
                 </div>
 
                 <div class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                    <a href="{{ route('yarns.create') }}" class="app-button">New Yarn</a>
-                    <a href="{{ route('yarns.index') }}" class="app-button-secondary">Open Yarns</a>
-                    <a href="{{ route('projects.index') }}" class="app-button-secondary">Projects</a>
-                    <a href="{{ route('colors.index') }}" class="app-button-secondary">Colors</a>
-                    <a href="{{ route('materials.index') }}" class="app-button-secondary">Materials</a>
-                    <a href="{{ route('locations.index') }}" class="app-button-secondary">Locations</a>
+                    <a href="{{ route('yarns.create') }}" class="app-button">Neues Garn</a>
+                    <a href="{{ route('yarns.index') }}" class="app-button-secondary">Garne öffnen</a>
+                    <a href="{{ route('projects.index') }}" class="app-button-secondary">Projekte</a>
+                    <a href="{{ route('colors.index') }}" class="app-button-secondary">Farben</a>
+                    <a href="{{ route('materials.index') }}" class="app-button-secondary">Materialien</a>
+                    <a href="{{ route('locations.index') }}" class="app-button-secondary">Orte</a>
                 </div>
             </div>
 
@@ -63,7 +63,7 @@
 
                     @if(auth()->user()->is_admin)
                         <a href="{{ route('admin.users.pending') }}" class="block rounded-2xl bg-amber-50 px-4 py-3 transition hover:bg-amber-100">
-                            <div class="font-medium text-stone-900">Pending registrations</div>
+                            <div class="font-medium text-stone-900">Ausstehende Registrierungen</div>
                             <div class="mt-1">{{ $pendingApprovals }} offene Freigaben</div>
                         </a>
                     @else
