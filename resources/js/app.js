@@ -24,22 +24,24 @@ document.addEventListener('alpine:init', () => {
         deferredPrompt: null,
         canInstall: false,
         standalone: isStandalone(),
+        iosDevice: isIos && !isStandalone(),
         ios: isIos && isSafari && !isStandalone(),
         online: window.navigator.onLine,
         installDismissed: installDismissedRecently,
+        installHelpVisible: false,
         updateDismissed: false,
         updateAvailable: false,
         get installVisible() {
-            return !this.standalone && !this.installDismissed && (this.canInstall || this.ios);
+            return !this.standalone && !this.installDismissed && (this.canInstall || this.iosDevice);
         },
         get installActionVisible() {
-            return !this.standalone && (this.canInstall || this.ios);
+            return !this.standalone;
         },
         get statusLabel() {
             return this.online ? 'Online' : 'Offline';
         },
         get visible() {
-            return (!this.updateDismissed && this.updateAvailable) || this.installVisible;
+            return (!this.updateDismissed && this.updateAvailable) || this.installVisible || this.installHelpVisible;
         },
         async promptInstall() {
             if (!this.deferredPrompt) {
@@ -53,10 +55,12 @@ document.addEventListener('alpine:init', () => {
         },
         dismissInstall() {
             this.installDismissed = true;
+            this.installHelpVisible = false;
             window.localStorage.setItem('wollradar-pwa-dismissed-at', String(Date.now()));
         },
         async openInstallOptions() {
             this.installDismissed = false;
+            this.installHelpVisible = true;
             window.localStorage.removeItem('wollradar-pwa-dismissed-at');
 
             if (this.canInstall && this.deferredPrompt) {

@@ -35,6 +35,12 @@
                         <p class="mt-1 text-sm leading-6 text-stone-600" x-show="!$store.pwa.updateAvailable && $store.pwa.ios">
                             In Safari auf <span class="font-medium text-stone-900">Teilen</span> tippen und dann <span class="font-medium text-stone-900">Zum Home-Bildschirm</span> wählen.
                         </p>
+                        <p class="mt-1 text-sm leading-6 text-stone-600" x-show="!$store.pwa.updateAvailable && $store.pwa.iosDevice && !$store.pwa.ios">
+                            Auf iPhone oder iPad bitte in <span class="font-medium text-stone-900">Safari</span> öffnen. Dort findest du über <span class="font-medium text-stone-900">Teilen</span> die Option <span class="font-medium text-stone-900">Zum Home-Bildschirm</span>.
+                        </p>
+                        <p class="mt-1 text-sm leading-6 text-stone-600" x-show="!$store.pwa.updateAvailable && !$store.pwa.canInstall && !$store.pwa.iosDevice">
+                            In diesem Browser ist keine direkte Installation verfügbar. Nutze dafür Safari auf iPhone/iPad oder einen unterstützten Browser mit Install-Funktion.
+                        </p>
                     </div>
 
                     <button
