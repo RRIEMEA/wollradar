@@ -14,24 +14,28 @@
 
         <title>{{ config('app.name', 'Wollradar') }}</title>
 
-        <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        <!-- Scripts -->
         @include('layouts.vite-assets')
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="app-shell min-h-screen">
+    <body class="font-sans antialiased">
+        <div class="app-shell">
+            <div class="app-frame">
+            @include('layouts.navigation')
             @include('layouts.install-banner')
-            <div class="flex min-h-screen flex-col items-center justify-center px-4 py-8">
-                <a href="/">
-                    <x-application-logo class="h-20 w-20 fill-current text-amber-600" />
-                </a>
 
-                <div class="mt-6 w-full max-w-md rounded-[28px] border border-white/80 bg-white/90 px-6 py-5 shadow-[0_20px_60px_-30px_rgba(28,25,23,0.35)] backdrop-blur">
-                    {{ $slot }}
-                </div>
+            @isset($header)
+                <header class="app-header">
+                    <div class="mx-auto w-full max-w-6xl">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endisset
+
+            <main class="app-main">
+                {{ $slot }}
+            </main>
             </div>
         </div>
     </body>

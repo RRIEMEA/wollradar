@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Registrierung eingegangen</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @include('layouts.vite-assets')
 </head>
 <body class="min-h-screen bg-gray-50 flex items-center justify-center p-6">
     <div class="w-full max-w-md rounded-lg bg-white p-6 shadow">

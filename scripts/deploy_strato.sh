@@ -195,15 +195,17 @@ status_release() {
 }
 
 ensure_public_storage_links() {
-    local current_root web_root
+    local current_root live_root web_root web_symlink
     current_root="${STRATO_APP_ROOT}/current"
+    web_symlink="${STRATO_WEB_APP_SYMLINK:-live}"
+    live_root="${STRATO_APP_ROOT}/${web_symlink}"
     web_root="${STRATO_WEB_ROOT:-}"
 
     if [[ -z "${web_root}" ]]; then
         web_root="$(dirname "${STRATO_APP_ROOT}")/../htdocs/wollradar_web"
     fi
 
-    run_remote "mkdir -p \"${current_root}/storage/app/public\" && rm -rf \"${current_root}/public/storage\" && ln -s \"${current_root}/storage/app/public\" \"${current_root}/public/storage\" && rm -rf \"${web_root}/storage\" && ln -s \"${current_root}/storage/app/public\" \"${web_root}/storage\""
+    run_remote "ln -sfn \"${current_root}\" \"${live_root}\" && perl -0pi -e \"s/apps\\/wollradar\\/[A-Za-z0-9_-]+\\/vendor\\/autoload\\.php/apps\\/wollradar\\/${web_symlink}\\/vendor\\/autoload.php/g; s/apps\\/wollradar\\/[A-Za-z0-9_-]+\\/bootstrap\\/app\\.php/apps\\/wollradar\\/${web_symlink}\\/bootstrap\\/app.php/g\" \"${web_root}/index.php\" && mkdir -p \"${current_root}/storage/app/public\" && rm -rf \"${current_root}/public/storage\" && ln -s \"${current_root}/storage/app/public\" \"${current_root}/public/storage\" && rm -rf \"${web_root}/storage\" && ln -s \"${current_root}/storage/app/public\" \"${web_root}/storage\""
 }
 
 if [[ $# -gt 0 ]]; then

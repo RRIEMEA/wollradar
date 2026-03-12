@@ -58,6 +58,7 @@ Zusatzannahmen:
 
 - `~/apps/wollradar/shared/.env` und `~/apps/wollradar/shared/storage` werden serverseitig verwendet
 - `current/public` wird serverseitig nach `~/htdocs/wollradar_web` gespiegelt
+- der Webroot bootet dauerhaft ueber `~/apps/wollradar/live`, damit STRATO kein altes Release unter dem Pfad `current` im Opcode-Cache festhaelt
 - Composer wird nicht auf STRATO ausgefuehrt; `vendor/` kommt aus dem lokalen Release-Artefakt
 
 ### 1. Konfiguration anlegen
@@ -73,6 +74,7 @@ Hinweis:
 - `STRATO_REMOTE_UPLOAD_DIR` ist der serverseitige echte Pfad fuer `deploy_release.sh`
 - `STRATO_REMOTE_UPLOAD_TARGET` ist das Ziel fuer `scp`; auf manchen STRATO-Setups muss das `~/incoming_upload` sein
 - `STRATO_WEB_ROOT` ist der echte Live-Webroot, z. B. `.../htdocs/wollradar_web`
+- `STRATO_WEB_APP_SYMLINK` ist optional und standardmaessig `live`
 - `STRATO_SSH_KEY` kann auf den lokalen Deploy-Key zeigen, z. B. `~/.ssh/id_ed25519`
 - `STRATO_SSH_EXTRA_OPTS="-o UpdateHostKeys=no"` unterdrueckt die bekannte STRATO-Warnung zur RSA-Hostkey-Aktualisierung
 
