@@ -14,7 +14,8 @@ document.addEventListener('alpine:init', () => {
     const installDismissedAt = Number.parseInt(window.localStorage.getItem('wollradar-pwa-dismissed-at') ?? '0', 10);
     const installDismissedRecently = Number.isFinite(installDismissedAt) && Date.now() - installDismissedAt < 1000 * 60 * 60 * 24 * 7;
     const ua = window.navigator.userAgent.toLowerCase();
-    const isIos = /iphone|ipad|ipod/.test(ua);
+    const isIpadOsDesktopMode = window.navigator.platform === 'MacIntel' && window.navigator.maxTouchPoints > 1;
+    const isIos = /iphone|ipad|ipod/.test(ua) || isIpadOsDesktopMode;
     const isSafari = /safari/.test(ua) && !/crios|fxios|edgios|opr\//.test(ua);
     let refreshing = false;
 
