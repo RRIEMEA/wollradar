@@ -21,12 +21,12 @@
 <nav x-data="{ open: false }" class="sticky top-0 z-40 border-b border-stone-200/80 bg-white/85 backdrop-blur">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex min-h-[4.5rem] items-center justify-between gap-3 py-3">
-            <a href="{{ route('dashboard') }}" class="flex min-w-0 items-center rounded-3xl p-1 transition hover:bg-amber-50">
+            <a href="{{ route('dashboard') }}" class="flex shrink-0 items-center rounded-3xl p-1 transition hover:bg-amber-50 lg:mr-2 lg:border-r lg:border-stone-200/80 lg:pr-5">
                 <x-application-wordmark class="block h-10 w-auto max-w-[12.5rem] sm:h-11 sm:max-w-[15rem]" />
             </a>
 
-            <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-between lg:gap-4">
-                <div class="no-scrollbar flex min-w-0 items-center gap-2 overflow-x-auto pb-1">
+            <div class="hidden lg:flex lg:min-w-0 lg:flex-1 lg:items-center lg:gap-4">
+                <div class="no-scrollbar flex min-w-0 flex-1 items-center gap-2 overflow-x-auto pb-1 pr-2">
                     @foreach($links as $link)
                         <a href="{{ route($link['route']) }}"
                            class="{{ $link['active'] ? 'bg-stone-900 text-white shadow-sm' : 'text-stone-600 hover:bg-stone-100 hover:text-stone-900' }} whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition">
@@ -35,7 +35,7 @@
                     @endforeach
                 </div>
 
-                <div class="flex items-center gap-3">
+                <div class="flex shrink-0 items-center gap-3 border-l border-stone-200/80 pl-4">
                     <div x-data x-cloak
                          class="inline-flex min-h-[36px] items-center rounded-full px-3 py-2 text-xs font-semibold"
                          :class="$store.pwa && $store.pwa.online ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'">
