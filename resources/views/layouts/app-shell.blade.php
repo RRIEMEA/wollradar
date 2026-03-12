@@ -8,7 +8,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="default">
         <meta name="apple-mobile-web-app-title" content="{{ config('app.name', 'Wollradar') }}">
-        <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+        <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
         <link rel="apple-touch-icon" href="{{ asset('icons/apple-touch-icon.png') }}">
         <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
 

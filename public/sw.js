@@ -12,11 +12,13 @@ const PUBLIC_PAGE_PATHS = new Set([
 const PRECACHE_URLS = [
     OFFLINE_URL,
     '/manifest.webmanifest',
-    '/favicon.svg',
+    '/favicon.png',
     '/icons/icon-192.png',
     '/icons/icon-512.png',
     '/icons/maskable-512.png',
     '/icons/apple-touch-icon.png',
+    '/branding/logo-icon.png',
+    '/branding/logo-wordmark.png',
 ];
 
 self.addEventListener('install', (event) => {

@@ -21,14 +21,8 @@
 <nav x-data="{ open: false }" class="sticky top-0 z-40 border-b border-stone-200/80 bg-white/85 backdrop-blur">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex min-h-[4.5rem] items-center justify-between gap-3 py-3">
-            <a href="{{ route('dashboard') }}" class="flex min-w-0 items-center gap-3 rounded-3xl p-1 transition hover:bg-amber-50">
-                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-amber-700">
-                    <x-application-logo class="h-6 w-6 fill-current" />
-                </span>
-                <span class="min-w-0">
-                    <span class="block truncate text-sm font-semibold text-stone-900">{{ config('app.name', 'Wollradar') }}</span>
-                    <span class="block truncate text-xs text-stone-500">Bestand mobil verwalten</span>
-                </span>
+            <a href="{{ route('dashboard') }}" class="flex min-w-0 items-center rounded-3xl p-1 transition hover:bg-amber-50">
+                <x-application-wordmark class="block h-10 w-auto max-w-[12.5rem] sm:h-11 sm:max-w-[15rem]" />
             </a>
 
             <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-between lg:gap-4">

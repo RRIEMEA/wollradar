@@ -242,11 +242,8 @@
 
                 <aside class="welcome-side">
                     <div class="brand-lockup">
-                        <div class="brand-icon">
-                            <x-application-logo class="h-8 w-8 fill-current text-amber-600" />
-                        </div>
                         <div>
-                            <p class="brand-name">{{ config('app.name', 'Wollradar') }}</p>
+                            <x-application-wordmark class="block h-12 w-auto max-w-full" />
                             <p class="brand-subtitle">Bestand, Projekte und Fotos in einer mobilen WebApp.</p>
                         </div>
                     </div>
