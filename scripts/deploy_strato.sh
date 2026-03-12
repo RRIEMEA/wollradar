@@ -187,10 +187,23 @@ prepare_release() {
 
 switch_release() {
     run_remote "\"${STRATO_REMOTE_SWITCH_SCRIPT}\" \"${RELEASE_NAME}\""
+    ensure_public_storage_links
 }
 
 status_release() {
     run_remote "\"${STRATO_REMOTE_STATUS_SCRIPT}\""
+}
+
+ensure_public_storage_links() {
+    local current_root web_root
+    current_root="${STRATO_APP_ROOT}/current"
+    web_root="${STRATO_WEB_ROOT:-}"
+
+    if [[ -z "${web_root}" ]]; then
+        web_root="$(dirname "${STRATO_APP_ROOT}")/../htdocs/wollradar_web"
+    fi
+
+    run_remote "mkdir -p \"${current_root}/storage/app/public\" && rm -rf \"${current_root}/public/storage\" && ln -s \"${current_root}/storage/app/public\" \"${current_root}/public/storage\" && rm -rf \"${web_root}/storage\" && ln -s \"${current_root}/storage/app/public\" \"${web_root}/storage\""
 }
 
 if [[ $# -gt 0 ]]; then

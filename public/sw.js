@@ -1,6 +1,14 @@
-const STATIC_CACHE_NAME = 'wollradar-static-v2';
-const PAGE_CACHE_NAME = 'wollradar-pages-v2';
+const STATIC_CACHE_NAME = 'wollradar-static-v3';
+const PAGE_CACHE_NAME = 'wollradar-pages-v3';
 const OFFLINE_URL = '/offline.html';
+const PUBLIC_PAGE_PATHS = new Set([
+    '/',
+    '/login',
+    '/register',
+    '/forgot-password',
+    '/reset-password',
+    '/verify-email',
+]);
 const PRECACHE_URLS = [
     OFFLINE_URL,
     '/manifest.webmanifest',
@@ -15,6 +23,8 @@ self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(STATIC_CACHE_NAME).then((cache) => cache.addAll(PRECACHE_URLS))
     );
+
+    self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -74,17 +84,19 @@ self.addEventListener('fetch', (event) => {
 
 async function handleNavigationRequest(request) {
     const cache = await caches.open(PAGE_CACHE_NAME);
+    const url = new URL(request.url);
+    const shouldCachePage = PUBLIC_PAGE_PATHS.has(url.pathname);
 
     try {
-        const response = await fetchWithTimeout(request, 4000);
+        const response = await fetchWithTimeout(request, 8000);
 
-        if (response.ok && response.headers.get('content-type')?.includes('text/html')) {
+        if (shouldCachePage && response.ok && response.headers.get('content-type')?.includes('text/html')) {
             cache.put(request, response.clone());
         }
 
         return response;
     } catch {
-        const cached = await cache.match(request);
+        const cached = shouldCachePage ? await cache.match(request) : null;
 
         if (cached) {
             return cached;

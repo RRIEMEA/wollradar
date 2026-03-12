@@ -92,6 +92,7 @@ RSYNC_EXCLUDES=(
     "--exclude=storage/framework/views/*"
     "--exclude=bootstrap/cache/*.php"
     "--exclude=public/uploads/"
+    "--exclude=public/storage"
     "--exclude=_releases/"
 )
 

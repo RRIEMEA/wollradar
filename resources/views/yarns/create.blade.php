@@ -23,7 +23,7 @@
             <form method="POST" action="{{ route('yarns.store') }}" enctype="multipart/form-data" class="space-y-8" data-draft-key="yarn-create">
                 @csrf
 
-                @include('yarns._form')
+                @include('yarns._form_fields')
 
                 <x-form-draft-tools title="Yarn-Entwurf" hint="Neue Garn-Eintrage werden lokal zwischengespeichert, bis du sie speicherst." />
 

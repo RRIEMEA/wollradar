@@ -27,7 +27,7 @@
                 @csrf
                 @method('PUT')
 
-                @include('yarns._form', ['yarn' => $yarn])
+                @include('yarns._form_fields', ['yarn' => $yarn])
 
                 <x-form-draft-tools title="Yarn-Entwurf" hint="Anderungen an diesem Garn werden lokal zwischengespeichert." />
 
