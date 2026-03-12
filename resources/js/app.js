@@ -31,6 +31,9 @@ document.addEventListener('alpine:init', () => {
         get installVisible() {
             return !this.standalone && !this.installDismissed && (this.canInstall || this.ios);
         },
+        get installActionVisible() {
+            return !this.standalone && (this.canInstall || this.ios);
+        },
         get statusLabel() {
             return this.online ? 'Online' : 'Offline';
         },
@@ -50,6 +53,14 @@ document.addEventListener('alpine:init', () => {
         dismissInstall() {
             this.installDismissed = true;
             window.localStorage.setItem('wollradar-pwa-dismissed-at', String(Date.now()));
+        },
+        async openInstallOptions() {
+            this.installDismissed = false;
+            window.localStorage.removeItem('wollradar-pwa-dismissed-at');
+
+            if (this.canInstall && this.deferredPrompt) {
+                await this.promptInstall();
+            }
         },
         dismissUpdate() {
             this.updateDismissed = true;

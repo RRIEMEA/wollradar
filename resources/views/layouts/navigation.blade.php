@@ -50,6 +50,17 @@
                         <span x-text="$store.pwa ? $store.pwa.statusLabel : 'Online'"></span>
                     </div>
 
+                    <button
+                        x-data
+                        x-cloak
+                        x-show="$store.pwa && $store.pwa.installActionVisible"
+                        type="button"
+                        @click="$store.pwa.openInstallOptions()"
+                        class="app-button-secondary !min-h-0 !rounded-full !px-4 !py-2"
+                    >
+                        Als App speichern
+                    </button>
+
                     <a href="{{ route('profile.edit') }}" class="app-button-secondary !min-h-0 !rounded-full !px-4 !py-2">
                         {{ Auth::user()->name }}
                     </a>
@@ -99,6 +110,17 @@
                           :class="$store.pwa && $store.pwa.online ? 'bg-emerald-500' : 'bg-red-500'"></span>
                     <span x-text="$store.pwa && $store.pwa.online ? 'Online' : 'Offline'"></span>
                 </div>
+
+                <button
+                    x-data
+                    x-cloak
+                    x-show="$store.pwa && $store.pwa.installActionVisible"
+                    type="button"
+                    @click="$store.pwa.openInstallOptions(); open = false"
+                    class="app-button-secondary w-full"
+                >
+                    Als App speichern
+                </button>
 
                 <a href="{{ route('profile.edit') }}" class="app-button-secondary w-full">
                     Profil
