@@ -149,8 +149,8 @@
                 @checked(old('is_finished', $yarn->is_finished ?? false))
             />
             <span>
-                <span class="block text-sm font-medium text-stone-900">Garn fertig</span>
-                <span class="block text-sm text-stone-500">Markiert diesen Garneintrag als abgeschlossen.</span>
+                <span class="block text-sm font-medium text-stone-900">Projekt fertig</span>
+                <span class="block text-sm text-stone-500">Markiert das dazugehörige Projekt als abgeschlossen.</span>
             </span>
         </label>
         @error('is_finished')<div class="text-sm text-red-600 mt-1">{{ $message }}</div>@enderror
