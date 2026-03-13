@@ -12,6 +12,6 @@ class AppLayout extends Component
      */
     public function render(): View
     {
-        return view('layouts.app-shell');
+        return view()->file(base_path('resources/views/layouts/app-live.blade.php'));
     }
 }

@@ -3,6 +3,7 @@ import './bootstrap';
 import Alpine from 'alpinejs';
 
 const DRAFT_STORAGE_PREFIX = 'wollradar:draft:';
+const SCROLL_RESTORE_STORAGE_KEY = 'wollradar:scroll-restore';
 const IMAGE_MAX_EDGE = 1600;
 const IMAGE_QUALITY = 0.82;
 const IMAGE_OPTIMIZE_MIN_BYTES = 350 * 1024;
@@ -123,6 +124,7 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
+initializeScrollRestoration();
 initializeDraftPersistence();
 initializeImageUploads();
 
@@ -168,6 +170,36 @@ function initializeImageUploads() {
     boot();
 }
 
+function initializeScrollRestoration() {
+    const boot = () => {
+        restorePendingScrollPosition();
+
+        document.querySelectorAll('form[data-preserve-scroll="true"]').forEach((form) => {
+            if (form.dataset.scrollRestoreInitialized === 'true') {
+                return;
+            }
+
+            form.dataset.scrollRestoreInitialized = 'true';
+            form.addEventListener('submit', () => {
+                window.sessionStorage.setItem(
+                    SCROLL_RESTORE_STORAGE_KEY,
+                    JSON.stringify({
+                        path: currentScrollPath(),
+                        y: window.scrollY,
+                    })
+                );
+            });
+        });
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot, { once: true });
+        return;
+    }
+
+    boot();
+}
+
 function initializeDraftPersistence() {
     const boot = () => {
         clearDraftMarkers();
@@ -180,6 +212,36 @@ function initializeDraftPersistence() {
     }
 
     boot();
+}
+
+function restorePendingScrollPosition() {
+    const raw = window.sessionStorage.getItem(SCROLL_RESTORE_STORAGE_KEY);
+
+    if (!raw) {
+        return;
+    }
+
+    try {
+        const state = JSON.parse(raw);
+
+        if (!state || state.path !== currentScrollPath() || typeof state.y !== 'number') {
+            window.sessionStorage.removeItem(SCROLL_RESTORE_STORAGE_KEY);
+            return;
+        }
+
+        window.sessionStorage.removeItem(SCROLL_RESTORE_STORAGE_KEY);
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                window.scrollTo({ top: state.y, left: 0, behavior: 'auto' });
+            });
+        });
+    } catch {
+        window.sessionStorage.removeItem(SCROLL_RESTORE_STORAGE_KEY);
+    }
+}
+
+function currentScrollPath() {
+    return `${window.location.pathname}${window.location.search}`;
 }
 
 function setupImageUpload(container) {

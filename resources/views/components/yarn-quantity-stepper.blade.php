@@ -17,7 +17,7 @@
 @endphp
 
 <div class="{{ $wrapperClasses }}">
-    <form method="POST" action="{{ route('yarns.quantity.adjust', $yarn) }}">
+    <form method="POST" action="{{ route('yarns.quantity.adjust', $yarn) }}" data-preserve-scroll="true">
         @csrf
         @method('PATCH')
         <input type="hidden" name="direction" value="decrement" />
@@ -31,7 +31,7 @@
         <div class="mt-0.5 text-sm font-semibold tabular-nums text-stone-900">{{ $displayQuantity }}</div>
     </div>
 
-    <form method="POST" action="{{ route('yarns.quantity.adjust', $yarn) }}">
+    <form method="POST" action="{{ route('yarns.quantity.adjust', $yarn) }}" data-preserve-scroll="true">
         @csrf
         @method('PATCH')
         <input type="hidden" name="direction" value="increment" />

@@ -24,7 +24,7 @@
     <body class="font-sans antialiased">
         <div class="app-shell">
             <div class="app-frame">
-            @include('layouts.navigation')
+            @include('layouts.navigation-shell')
             @include('layouts.install-banner')
 
             <!-- Page Heading -->

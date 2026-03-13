@@ -32,37 +32,24 @@
             </a>
 
             <div class="hidden lg:block lg:min-w-0">
-                <div class="no-scrollbar flex min-w-0 items-center gap-2 overflow-x-auto px-1 pb-1">
-                @foreach($primaryLinks as $link)
-                    <a href="{{ route($link['route']) }}"
-                       class="{{ $link['active'] ? 'bg-stone-900 text-white shadow-sm' : 'text-stone-600 hover:bg-stone-100 hover:text-stone-900' }} whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition">
-                        {{ $link['label'] }}
-                    </a>
-                @endforeach
+                <div class="flex min-w-0 flex-wrap items-center gap-2 px-1 pb-1">
+                    @foreach($primaryLinks as $link)
+                        <a href="{{ route($link['route']) }}"
+                           class="{{ $link['active'] ? 'bg-stone-900 text-white shadow-sm' : 'text-stone-600 hover:bg-stone-100 hover:text-stone-900' }} whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition">
+                            {{ $link['label'] }}
+                        </a>
+                    @endforeach
+                </div>
 
                 @if(count($secondaryLinks) > 0)
-                    <x-dropdown align="left" width="64" contentClasses="rounded-3xl border border-stone-200 bg-white/95 p-2 shadow-[0_18px_45px_-28px_rgba(28,25,23,0.35)] backdrop-blur">
-                        <x-slot name="trigger">
-                            <button type="button"
-                                    class="{{ $secondaryActive ? 'bg-stone-900 text-white shadow-sm' : 'border border-stone-200 bg-white text-stone-600 hover:bg-stone-100 hover:text-stone-900' }} inline-flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition">
-                                <span>Mehr</span>
-                                <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4">
-                                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.512a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" />
-                                </svg>
-                            </button>
-                        </x-slot>
-
-                        <x-slot name="content">
-                            <div class="space-y-1">
-                                @foreach($secondaryLinks as $link)
-                                    <a href="{{ route($link['route']) }}"
-                                       class="{{ $link['active'] ? 'bg-stone-900 text-white' : 'text-stone-700 hover:bg-stone-100 hover:text-stone-900' }} block rounded-2xl px-4 py-3 text-sm font-medium transition">
-                                        {{ $link['label'] }}
-                                    </a>
-                                @endforeach
-                            </div>
-                        </x-slot>
-                    </x-dropdown>
+                    <div class="mt-2 flex min-w-0 flex-wrap items-center gap-2 px-1">
+                        @foreach($secondaryLinks as $link)
+                            <a href="{{ route($link['route']) }}"
+                               class="{{ $link['active'] ? 'border-stone-900 bg-stone-900 text-white shadow-sm' : 'border border-stone-200 bg-white text-stone-600 hover:bg-stone-100 hover:text-stone-900' }} whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-semibold transition">
+                                {{ $link['label'] }}
+                            </a>
+                        @endforeach
+                    </div>
                 @endif
                 </div>
             </div>
