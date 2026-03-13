@@ -8,9 +8,11 @@ use App\Notifications\AdminNewUserPendingApproval;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Throwable;
 
 class RegisteredUserController extends Controller
 {
@@ -43,11 +45,27 @@ class RegisteredUserController extends Controller
             'is_approved' => false,
         ]);
 
-        User::query()
+        $admins = User::query()
             ->where('is_admin', true)
             ->where('is_approved', true)
-            ->get()
-            ->each(fn (User $admin) => $admin->notify(new AdminNewUserPendingApproval($user)));
+            ->get(['id', 'name', 'email']);
+
+        app()->terminating(function () use ($admins, $user) {
+            $admins->each(function (User $admin) use ($user) {
+                try {
+                    $admin->notify(new AdminNewUserPendingApproval($user));
+                } catch (Throwable $exception) {
+                    report($exception);
+
+                    Log::warning('Admin-Benachrichtigung zur Registrierung konnte nicht versendet werden.', [
+                        'admin_id' => $admin->id,
+                        'admin_email' => $admin->email,
+                        'pending_user_id' => $user->id,
+                        'pending_user_email' => $user->email,
+                    ]);
+                }
+            });
+        });
 
         event(new Registered($user));
 

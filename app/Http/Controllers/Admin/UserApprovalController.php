@@ -8,7 +8,9 @@ use App\Notifications\UserApprovedNotification;
 use App\Notifications\UserRejectedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Throwable;
 
 class UserApprovalController extends Controller
 {
@@ -34,7 +36,18 @@ class UserApprovalController extends Controller
             'approved_by' => $request->user()->id,
         ])->save();
 
-        $user->notify(new UserApprovedNotification());
+        app()->terminating(function () use ($user) {
+            try {
+                $user->notify(new UserApprovedNotification());
+            } catch (Throwable $exception) {
+                report($exception);
+
+                Log::warning('Freigabe-Mail konnte nicht versendet werden.', [
+                    'user_id' => $user->id,
+                    'user_email' => $user->email,
+                ]);
+            }
+        });
 
         return redirect()
             ->route('admin.users.pending')
@@ -57,7 +70,18 @@ class UserApprovalController extends Controller
             'approved_by' => null,
         ])->save();
 
-        $user->notify(new UserRejectedNotification());
+        app()->terminating(function () use ($user) {
+            try {
+                $user->notify(new UserRejectedNotification());
+            } catch (Throwable $exception) {
+                report($exception);
+
+                Log::warning('Ablehnungs-Mail konnte nicht versendet werden.', [
+                    'user_id' => $user->id,
+                    'user_email' => $user->email,
+                ]);
+            }
+        });
 
         return redirect()
             ->route('admin.users.pending')
