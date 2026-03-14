@@ -48,6 +48,7 @@ class User extends Authenticatable
             'is_approved' => 'boolean',
             'approved_at' => 'datetime',
             'approved_by' => 'integer',
+            'privacy_acknowledged_at' => 'datetime',
         ];
     }
 }

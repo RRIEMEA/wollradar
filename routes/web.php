@@ -21,6 +21,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::view('/impressum', 'legal.imprint')->name('legal.imprint');
+Route::view('/datenschutz', 'legal.privacy')->name('legal.privacy');
+
 Route::get('/dashboard', function () {
     $userId = auth()->id();
 
@@ -65,7 +68,7 @@ Route::get('/dashboard', function () {
         ],
         'pendingApprovals' => auth()->user()->is_admin
             ? User::query()->where(function ($query) {
-                $query->whereNull('is_approved')->orWhere('is_approved', false);
+                $query->whereNull('status')->orWhere('status', 'PENDING');
             })->count()
             : 0,
     ]);
@@ -90,6 +93,12 @@ Route::middleware(['auth', 'admin'])
 
         Route::patch('/users/{user}/reject',  [UserApprovalController::class, 'reject'])
             ->name('users.reject');
+
+        Route::patch('/users/{user}/deactivate', [UserApprovalController::class, 'deactivate'])
+            ->name('users.deactivate');
+
+        Route::delete('/users/{user}', [UserApprovalController::class, 'destroy'])
+            ->name('users.destroy');
 
         Route::post('/users/{user}/make-admin', [UserApprovalController::class, 'makeAdmin'])
             ->name('users.makeAdmin');

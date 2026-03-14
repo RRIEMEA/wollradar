@@ -14,6 +14,11 @@ use Throwable;
 
 class UserApprovalController extends Controller
 {
+    private const STATUS_PENDING = 'PENDING';
+    private const STATUS_APPROVED = 'APPROVED';
+    private const STATUS_REJECTED = 'REJECTED';
+    private const STATUS_DEACTIVATED = 'DEACTIVATED';
+
     public function index(): View
     {
         return $this->pending();
@@ -31,7 +36,7 @@ class UserApprovalController extends Controller
         // Wichtig: forceFill umgeht fillable-Probleme sauber
         $user->forceFill([
             'is_approved' => true,
-            'status' => 'APPROVED',         // empfohlen, weil du bereits status=PENDING nutzt
+            'status' => self::STATUS_APPROVED,
             'approved_at' => now(),
             'approved_by' => $request->user()->id,
         ])->save();
@@ -64,7 +69,7 @@ class UserApprovalController extends Controller
 
         // Variante 1 (empfohlen): User behalten, aber Status setzen
         $user->forceFill([
-            'status' => 'REJECTED',
+            'status' => self::STATUS_REJECTED,
             'is_approved' => false,
             'approved_at' => null,
             'approved_by' => null,
@@ -86,6 +91,49 @@ class UserApprovalController extends Controller
         return redirect()
             ->route('admin.users.pending')
             ->with('status', 'Benutzer wurde abgelehnt.');
+    }
+
+    public function deactivate(Request $request, User $user): RedirectResponse
+    {
+        if (! $user->is_approved) {
+            return redirect()
+                ->route('admin.users.pending')
+                ->with('status', 'Nur freigegebene Benutzer können deaktiviert werden.');
+        }
+
+        if ($request->user()->is($user)) {
+            return redirect()
+                ->route('admin.users.pending')
+                ->with('status', 'Du kannst dein eigenes Konto nicht deaktivieren.');
+        }
+
+        $user->forceFill([
+            'status' => self::STATUS_DEACTIVATED,
+            'is_approved' => false,
+            'is_admin' => false,
+            'approved_at' => null,
+            'approved_by' => null,
+        ])->save();
+
+        return redirect()
+            ->route('admin.users.pending')
+            ->with('status', 'Benutzer wurde deaktiviert.');
+    }
+
+    public function destroy(User $user): RedirectResponse
+    {
+        if ($user->is_approved || ! in_array($user->status, [self::STATUS_DEACTIVATED, self::STATUS_REJECTED], true)) {
+            return redirect()
+                ->route('admin.users.pending')
+                ->with('status', 'Gelöscht werden können nur deaktivierte oder abgelehnte Benutzer.');
+        }
+
+        $email = $user->email;
+        $user->delete();
+
+        return redirect()
+            ->route('admin.users.pending')
+            ->with('status', "Benutzer wurde gelöscht: {$email}");
     }
 
     public function makeAdmin(User $user): RedirectResponse
@@ -112,18 +160,33 @@ class UserApprovalController extends Controller
     public function pending(): View
     {
         $pendingUsers = User::query()
-            ->where(function ($q) {
-                $q->whereNull('is_approved')->orWhere('is_approved', false);
+            ->where(function ($query) {
+                $query->whereNull('status')->orWhere('status', self::STATUS_PENDING);
             })
             ->orderByDesc('created_at')
-            ->get(['id','name','email','status','created_at','is_admin','is_approved']);
+            ->get(['id','name','email','status','created_at','is_admin','is_approved','privacy_acknowledged_at']);
+
+        $rejectedUsers = User::query()
+            ->where('status', self::STATUS_REJECTED)
+            ->orderByDesc('created_at')
+            ->get(['id','name','email','status','created_at','is_admin','is_approved','privacy_acknowledged_at']);
 
         $approvedUsers = User::query()
             ->where('is_approved', true)
             ->orderByDesc('created_at')
-            ->get(['id','name','email','status','created_at','is_admin','is_approved']);
+            ->get(['id','name','email','status','created_at','is_admin','is_approved','privacy_acknowledged_at']);
 
-        return view('admin.users.pending', compact('pendingUsers', 'approvedUsers'));
+        $deactivatedUsers = User::query()
+            ->where('status', self::STATUS_DEACTIVATED)
+            ->orderByDesc('created_at')
+            ->get(['id','name','email','status','created_at','is_admin','is_approved','privacy_acknowledged_at']);
+
+        return view('admin.users.pending', compact(
+            'pendingUsers',
+            'rejectedUsers',
+            'approvedUsers',
+            'deactivatedUsers'
+        ));
     }
 
 }

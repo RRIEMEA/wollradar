@@ -30,6 +30,11 @@
                 <div class="mt-6 w-full max-w-md rounded-[28px] border border-white/80 bg-white/90 px-6 py-5 shadow-[0_20px_60px_-30px_rgba(28,25,23,0.35)] backdrop-blur">
                     {{ $slot }}
                 </div>
+
+                <div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-stone-600">
+                    <a href="{{ route('legal.imprint') }}" class="underline underline-offset-4 transition hover:text-stone-900">Impressum</a>
+                    <a href="{{ route('legal.privacy') }}" class="underline underline-offset-4 transition hover:text-stone-900">Datenschutz</a>
+                </div>
             </div>
         </div>
     </body>

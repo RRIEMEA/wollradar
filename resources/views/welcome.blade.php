@@ -218,6 +218,29 @@
                     padding: 1.5rem;
                 }
             }
+
+            .welcome-footer {
+                padding: 0 1.25rem 1.5rem;
+                text-align: center;
+                color: #57534e;
+                font-size: 0.95rem;
+            }
+
+            .welcome-footer p {
+                margin: 0 0 0.75rem;
+            }
+
+            .welcome-footer nav {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.75rem 1.25rem;
+            }
+
+            .welcome-footer a {
+                color: #57534e;
+                text-underline-offset: 0.22rem;
+            }
         </style>
     </head>
     <body>
@@ -291,5 +314,13 @@
                 </aside>
             </section>
         </main>
+
+        <footer class="welcome-footer">
+            <p>Wollradar ist ein privates Hobbyprojekt ohne finanzielle oder kommerzielle Interessen.</p>
+            <nav aria-label="Rechtliches">
+                <a href="{{ route('legal.imprint') }}">Impressum</a>
+                <a href="{{ route('legal.privacy') }}">Datenschutz</a>
+            </nav>
+        </footer>
     </body>
 </html>
