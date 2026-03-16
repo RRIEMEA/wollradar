@@ -214,15 +214,13 @@
                     <input type="file"
                            name="photo"
                            accept="image/*"
-                           capture="environment"
                            class="hidden"
-                           data-image-input="camera" />
+                           data-image-input />
 
-                    <input type="file"
-                           name="photo"
-                           accept="image/*"
-                           class="hidden"
-                           data-image-input="gallery" />
+                    <input type="hidden"
+                           name="photo_data_url"
+                           value=""
+                           data-image-data-url />
                 </div>
             </div>
         </div>

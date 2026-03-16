@@ -256,39 +256,35 @@ function setupImageUpload(container) {
     const emptyState = container.querySelector('[data-image-empty]');
     const feedback = container.querySelector('[data-image-feedback]');
     const clearButton = container.querySelector('[data-image-clear]');
-    const inputs = {
-        camera: container.querySelector('[data-image-input="camera"]'),
-        gallery: container.querySelector('[data-image-input="gallery"]'),
-    };
+    const input = container.querySelector('[data-image-input]');
+    const dataUrlInput = container.querySelector('[data-image-data-url]');
     let objectUrl = null;
+    let activeMode = 'gallery';
 
-    Object.entries(inputs).forEach(([mode, input]) => {
-        if (!input) {
+    if (!input) {
+        return;
+    }
+
+    input.addEventListener('change', () => {
+        const file = input.files?.[0];
+
+        if (!file) {
             return;
         }
 
-        input.addEventListener('change', () => {
-            const file = input.files?.[0];
+        updateDraftFeedback(
+            feedback,
+            `${activeMode === 'camera' ? 'Kamerafoto' : 'Galeriebild'} wird optimiert...`
+        );
 
-            if (!file) {
-                return;
-            }
+        optimizeUploadImage(file).then((result) => {
+            const fileForUpload = result.file;
+            assignFileToInput(input, fileForUpload);
 
-            updateDraftFeedback(
-                feedback,
-                `${mode === 'camera' ? 'Kamerafoto' : 'Galeriebild'} wird optimiert...`
-            );
-
-            Object.entries(inputs).forEach(([otherMode, otherInput]) => {
-                if (otherMode !== mode && otherInput) {
-                    otherInput.value = '';
+            readFileAsDataUrl(fileForUpload).then((dataUrl) => {
+                if (dataUrlInput) {
+                    dataUrlInput.value = typeof dataUrl === 'string' ? dataUrl : '';
                 }
-            });
-
-            optimizeUploadImage(file).then((result) => {
-                const fileForUpload = result.file;
-
-                assignFileToInput(input, fileForUpload);
 
                 if (objectUrl) {
                     URL.revokeObjectURL(objectUrl);
@@ -300,35 +296,60 @@ function setupImageUpload(container) {
                 const sizeInfo = `${formatFileSize(fileForUpload.size)}${result.optimized ? ` statt ${formatFileSize(file.size)}` : ''}`;
                 updateDraftFeedback(
                     feedback,
-                    `${mode === 'camera' ? 'Kamerafoto' : 'Galeriebild'} bereit: ${fileForUpload.name} · ${sizeInfo}`
+                    `${activeMode === 'camera' ? 'Kamerafoto' : 'Galeriebild'} bereit: ${fileForUpload.name} · ${sizeInfo}`
                 );
             }).catch((error) => {
-                console.error('Image optimization failed:', error);
+                console.error('Preparing image data URL failed:', error);
+
+                if (dataUrlInput) {
+                    dataUrlInput.value = '';
+                }
 
                 if (objectUrl) {
                     URL.revokeObjectURL(objectUrl);
                 }
 
-                objectUrl = URL.createObjectURL(file);
+                objectUrl = URL.createObjectURL(fileForUpload);
                 showImagePreview(preview, emptyState, objectUrl);
-                updateDraftFeedback(feedback, `Bildauswahl aktiv: ${file.name}`);
+                updateDraftFeedback(feedback, `Bildauswahl aktiv: ${fileForUpload.name}`);
             });
+        }).catch((error) => {
+            console.error('Image optimization failed:', error);
+
+            if (dataUrlInput) {
+                dataUrlInput.value = '';
+            }
+
+            if (objectUrl) {
+                URL.revokeObjectURL(objectUrl);
+            }
+
+            objectUrl = URL.createObjectURL(file);
+            showImagePreview(preview, emptyState, objectUrl);
+            updateDraftFeedback(feedback, `Bildauswahl aktiv: ${file.name}`);
         });
     });
 
     container.querySelectorAll('[data-image-trigger]').forEach((button) => {
         button.addEventListener('click', () => {
             const mode = button.dataset.imageTrigger;
-            inputs[mode]?.click();
+            activeMode = mode === 'camera' ? 'camera' : 'gallery';
+
+            if (activeMode === 'camera') {
+                input.setAttribute('capture', 'environment');
+            } else {
+                input.removeAttribute('capture');
+            }
+
+            input.click();
         });
     });
 
     clearButton?.addEventListener('click', () => {
-        Object.values(inputs).forEach((input) => {
-            if (input) {
-                input.value = '';
-            }
-        });
+        clearFileInput(input);
+        if (dataUrlInput) {
+            dataUrlInput.value = '';
+        }
 
         if (objectUrl) {
             URL.revokeObjectURL(objectUrl);
@@ -449,13 +470,27 @@ function loadImageElement(src) {
 }
 
 function assignFileToInput(input, file) {
+    if (!input) {
+        return false;
+    }
+
     try {
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
         input.files = dataTransfer.files;
+        return true;
     } catch (error) {
         console.error('Assigning optimized image failed:', error);
+        return false;
     }
+}
+
+function clearFileInput(input) {
+    if (!input) {
+        return;
+    }
+
+    input.value = '';
 }
 
 function renameFileExtension(name, extension) {

@@ -162,7 +162,7 @@
                     <article class="app-card relative z-0 !backdrop-blur-none focus-within:z-20">
                         <div class="flex items-start gap-4">
                             @if($yarn->photo_path)
-                                <a href="{{ Storage::url($yarn->photo_path) }}" target="_blank" class="shrink-0">
+                                <a href="{{ route('yarns.edit', $yarn) }}" class="shrink-0">
                                     <img
                                         src="{{ Storage::url($yarn->photo_path) }}"
                                         alt="Garnfoto"
@@ -179,7 +179,9 @@
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-start justify-between gap-3">
                                     <div>
-                                        <div class="text-lg font-semibold text-stone-950">{{ $yarn->name ?? ('Garn #' . $yarn->id) }}</div>
+                                        <a href="{{ route('yarns.edit', $yarn) }}" class="text-lg font-semibold text-stone-950 transition hover:text-amber-700">
+                                            {{ $yarn->name ?? ('Garn #' . $yarn->id) }}
+                                        </a>
                                         <div class="mt-1 text-sm text-stone-500">{{ $yarn->project?->name ?? 'Kein Projekt' }}</div>
                                         <label class="mt-3 inline-flex items-center gap-2 text-sm text-stone-600">
                                             <input
@@ -245,8 +247,7 @@
                                     <td class="px-4 py-4">
                                         <div class="flex items-center gap-3">
                                             @if($yarn->photo_path)
-                                                <a href="{{ Storage::url($yarn->photo_path) }}"
-                                                   target="_blank"
+                                                <a href="{{ route('yarns.edit', $yarn) }}"
                                                    class="shrink-0 inline-block">
                                                     <img
                                                         src="{{ Storage::url($yarn->photo_path) }}"
@@ -262,9 +263,9 @@
                                             @endif
 
                                             <div class="min-w-0">
-                                                <div class="truncate font-medium text-stone-900">
+                                                <a href="{{ route('yarns.edit', $yarn) }}" class="block truncate font-medium text-stone-900 transition hover:text-amber-700">
                                                     {{ $yarn->name ?? ('Garn #' . $yarn->id) }}
-                                                </div>
+                                                </a>
                                                 <label class="mt-2 inline-flex items-center gap-2 text-xs text-stone-600">
                                                     <input
                                                         type="checkbox"

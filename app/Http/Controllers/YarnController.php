@@ -99,10 +99,7 @@ class YarnController extends Controller
     {
         $data = $this->validateYarn($request);
 
-        $photoPath = null;
-        if ($request->hasFile('photo')) {
-            $photoPath = $this->storeYarnPhoto($request->file('photo'));
-        }
+        $photoPath = $this->extractYarnPhotoPath($request);
 
         $yarn = Yarn::query()->create([
             'user_id'       => auth()->id(),
@@ -187,12 +184,12 @@ class YarnController extends Controller
         $data = $this->validateYarn($request);
 
         $photoPath = $yarn->photo_path;
-        if ($request->hasFile('photo')) {
+        if ($this->requestContainsYarnPhoto($request)) {
             // delete old
             if ($yarn->photo_path) {
                 Storage::disk('public')->delete($yarn->photo_path);
             }
-            $photoPath = $this->storeYarnPhoto($request->file('photo'));
+            $photoPath = $this->extractYarnPhotoPath($request);
         }
 
         $yarn->update([
@@ -267,10 +264,31 @@ class YarnController extends Controller
 
             // Photo: bewusst eingeschränkt (HEIC von iPhone ist je nach Server-Setup schwierig)
             'photo' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:8192'],
+            'photo_data_url' => ['nullable', 'string'],
 
             'notes' => ['nullable', 'string'],
             'is_finished' => ['nullable', 'boolean'],
         ]);
+    }
+
+    private function requestContainsYarnPhoto(Request $request): bool
+    {
+        return $request->hasFile('photo') || filled($request->input('photo_data_url'));
+    }
+
+    private function extractYarnPhotoPath(Request $request): ?string
+    {
+        if ($request->hasFile('photo')) {
+            return $this->storeYarnPhoto($request->file('photo'));
+        }
+
+        $dataUrl = (string) $request->input('photo_data_url', '');
+
+        if ($dataUrl === '') {
+            return null;
+        }
+
+        return $this->storeYarnPhotoFromDataUrl($dataUrl);
     }
 
     private function storeYarnPhoto(\Illuminate\Http\UploadedFile $file): string
@@ -280,6 +298,33 @@ class YarnController extends Controller
 
         $encoded = $img->toWebp(quality: 80);
 
+        return $this->persistEncodedPhoto($encoded);
+    }
+
+    private function storeYarnPhotoFromDataUrl(string $dataUrl): string
+    {
+        if (! preg_match('/^data:image\/[a-zA-Z0-9.+-]+;base64,/', $dataUrl)) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'photo' => 'Das Kamerabild konnte nicht verarbeitet werden.',
+            ]);
+        }
+
+        $binary = base64_decode(substr($dataUrl, strpos($dataUrl, ',') + 1), true);
+
+        if ($binary === false) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'photo' => 'Das Kamerabild konnte nicht verarbeitet werden.',
+            ]);
+        }
+
+        $img = Image::read($binary)->scaleDown(width: 800);
+        $encoded = $img->toWebp(quality: 80);
+
+        return $this->persistEncodedPhoto($encoded);
+    }
+
+    private function persistEncodedPhoto(mixed $encoded): string
+    {
         $dir = 'uploads/yarns';
         $filename = 'yarn_' . uniqid('', true) . '.webp';
         $path = $dir . '/' . $filename;
