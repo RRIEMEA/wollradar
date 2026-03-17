@@ -40,6 +40,7 @@
             <main class="app-main">
                 {{ $slot }}
             </main>
+
             </div>
         </div>
     </body>

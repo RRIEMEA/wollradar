@@ -183,45 +183,33 @@
                                             {{ $yarn->name ?? ('Garn #' . $yarn->id) }}
                                         </a>
                                         <div class="mt-1 text-sm text-stone-500">{{ $yarn->project?->name ?? 'Kein Projekt' }}</div>
-                                        <label class="mt-3 inline-flex items-center gap-2 text-sm text-stone-600">
-                                            <input
-                                                type="checkbox"
-                                                class="h-4 w-4 rounded border-stone-300 text-amber-700 focus:ring-amber-500"
-                                                disabled
-                                                @checked($yarn->is_finished)
-                                            />
-                                            <span>Fertig</span>
-                                        </label>
                                     </div>
                                     <x-yarn-quantity-stepper :yarn="$yarn" compact />
                                 </div>
                             </div>
                         </div>
 
-                        <dl class="mt-4 grid grid-cols-2 gap-3 text-sm text-stone-600">
-                            <div>
-                                <dt class="text-stone-400">Farbe</dt>
-                                <dd class="mt-1 text-stone-900">{{ $yarn->color?->name ?? '—' }}</dd>
+                        <div class="mt-3 flex items-center justify-between gap-3 text-sm text-stone-700">
+                            <div class="min-w-0 flex flex-wrap items-center gap-x-4 gap-y-1">
+                                <div class="inline-flex items-center gap-1.5">
+                                    <svg viewBox="0 0 20 20" class="h-4 w-4 shrink-0 fill-none stroke-stone-400" stroke-width="1.7" aria-hidden="true">
+                                        <path d="M10 3.5c-3 0-5.5 2.2-5.5 4.9 0 1.4.7 2.6 1.8 3.5.4.3.6.8.5 1.3-.1.4-.2.8-.2 1.1 0 .7.5 1.2 1.2 1.2.5 0 .8-.2 1.1-.5.4-.4.9-.7 1.5-.7h.6c3 0 5.5-2.2 5.5-4.9S13 3.5 10 3.5Z" />
+                                        <circle cx="7.4" cy="8.3" r=".7" fill="currentColor" class="text-stone-400 stroke-none" />
+                                        <circle cx="10.1" cy="7.1" r=".7" fill="currentColor" class="text-stone-400 stroke-none" />
+                                        <circle cx="12.8" cy="8.4" r=".7" fill="currentColor" class="text-stone-400 stroke-none" />
+                                    </svg>
+                                    <span class="sr-only">Farbe</span>
+                                    <span class="truncate">{{ $yarn->color?->name ?? '—' }}</span>
+                                </div>
+                                <div class="inline-flex items-center gap-1.5">
+                                    <svg viewBox="0 0 20 20" class="h-4 w-4 shrink-0 fill-none stroke-stone-400" stroke-width="1.7" aria-hidden="true">
+                                        <path d="M4 6.5a2.5 2.5 0 0 1 2.5-2.5h6l3.5 3.5V13.5A2.5 2.5 0 0 1 13.5 16h-7A2.5 2.5 0 0 1 4 13.5v-7Z" />
+                                        <path d="M12.5 4v3.5H16" />
+                                    </svg>
+                                    <span class="sr-only">Marke</span>
+                                    <span class="truncate">{{ $yarn->brand?->name ?? '—' }}</span>
+                                </div>
                             </div>
-                            <div>
-                                <dt class="text-stone-400">Material</dt>
-                                <dd class="mt-1 text-stone-900">{{ $yarn->material?->name ?? '—' }}</dd>
-                            </div>
-                            <div>
-                                <dt class="text-stone-400">Marke</dt>
-                                <dd class="mt-1 text-stone-900">{{ $yarn->brand?->name ?? '—' }}</dd>
-                            </div>
-                            <div>
-                                <dt class="text-stone-400">Ort</dt>
-                                <dd class="mt-1 text-stone-900">{{ $yarn->location?->name ?? '—' }}</dd>
-                            </div>
-                            <div>
-                                <dt class="text-stone-400">Nadeln</dt>
-                                <dd class="mt-1 text-stone-900">{{ $yarn->needle_size ?? '—' }}</dd>
-                            </div>
-                        </dl>
-
-                        <div class="mt-4 flex justify-end">
                             <x-yarn-actions-menu :yarn="$yarn" mobile-sheet />
                         </div>
                     </article>
@@ -237,27 +225,26 @@
                                 <th class="px-4 py-3 text-left">Projekt</th>
                                 <th class="px-4 py-3 text-left">Details</th>
                                 <th class="px-4 py-3 text-right">Menge</th>
-                                <th class="px-4 py-3 text-left">Aktionen</th>
                             </tr>
                         </thead>
 
                         <tbody class="divide-y divide-stone-200 text-stone-800">
                             @foreach($yarns as $yarn)
                                 <tr class="align-top hover:bg-stone-50">
-                                    <td class="px-4 py-4">
-                                        <div class="flex items-center gap-3">
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center gap-2.5">
                                             @if($yarn->photo_path)
                                                 <a href="{{ route('yarns.edit', $yarn) }}"
                                                    class="shrink-0 inline-block">
                                                     <img
                                                         src="{{ Storage::url($yarn->photo_path) }}"
                                                         alt="Garnfoto"
-                                                        class="h-14 w-14 rounded-2xl border border-stone-200 object-cover"
+                                                        class="h-12 w-12 rounded-xl border border-stone-200 object-cover"
                                                         loading="lazy"
                                                     />
                                                 </a>
                                             @else
-                                                <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-stone-200 bg-stone-50 text-stone-400">
+                                                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-stone-200 bg-stone-50 text-stone-400">
                                                     —
                                                 </div>
                                             @endif
@@ -266,41 +253,46 @@
                                                 <a href="{{ route('yarns.edit', $yarn) }}" class="block truncate font-medium text-stone-900 transition hover:text-amber-700">
                                                     {{ $yarn->name ?? ('Garn #' . $yarn->id) }}
                                                 </a>
-                                                <label class="mt-2 inline-flex items-center gap-2 text-xs text-stone-600">
-                                                    <input
-                                                        type="checkbox"
-                                                        class="h-4 w-4 rounded border-stone-300 text-amber-700 focus:ring-amber-500"
-                                                        disabled
-                                                        @checked($yarn->is_finished)
-                                                    />
-                                                    <span>Fertig</span>
-                                                </label>
                                             </div>
                                         </div>
                                     </td>
 
-                                    <td class="px-4 py-4">
+                                    <td class="px-4 py-3">
                                         <div class="truncate font-medium text-stone-900">
                                             {{ $yarn->project?->name ?? '—' }}
                                         </div>
                                     </td>
 
-                                    <td class="px-4 py-4">
-                                            <div class="space-y-0.5 text-stone-700">
-                                                <div><span class="text-stone-400">Farbe:</span> {{ $yarn->color?->name ?? '—' }}</div>
-                                                <div><span class="text-stone-400">Material:</span> {{ $yarn->material?->name ?? '—' }}</div>
-                                                <div><span class="text-stone-400">Marke:</span> {{ $yarn->brand?->name ?? '—' }}</div>
-                                                <div><span class="text-stone-400">Ort:</span> {{ $yarn->location?->name ?? '—' }}</div>
-                                                <div><span class="text-stone-400">Nadeln:</span> {{ $yarn->needle_size ?? '—' }}</div>
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center justify-between gap-3 text-stone-700">
+                                            <div class="min-w-0 flex flex-wrap items-center gap-x-4 gap-y-1">
+                                                <div class="inline-flex items-center gap-1.5">
+                                                    <svg viewBox="0 0 20 20" class="h-4 w-4 shrink-0 fill-none stroke-stone-400" stroke-width="1.7" aria-hidden="true">
+                                                        <path d="M10 3.5c-3 0-5.5 2.2-5.5 4.9 0 1.4.7 2.6 1.8 3.5.4.3.6.8.5 1.3-.1.4-.2.8-.2 1.1 0 .7.5 1.2 1.2 1.2.5 0 .8-.2 1.1-.5.4-.4.9-.7 1.5-.7h.6c3 0 5.5-2.2 5.5-4.9S13 3.5 10 3.5Z" />
+                                                        <circle cx="7.4" cy="8.3" r=".7" fill="currentColor" class="text-stone-400 stroke-none" />
+                                                        <circle cx="10.1" cy="7.1" r=".7" fill="currentColor" class="text-stone-400 stroke-none" />
+                                                        <circle cx="12.8" cy="8.4" r=".7" fill="currentColor" class="text-stone-400 stroke-none" />
+                                                    </svg>
+                                                    <span class="sr-only">Farbe</span>
+                                                    <span class="truncate">{{ $yarn->color?->name ?? '—' }}</span>
+                                                </div>
+                                                <div class="inline-flex items-center gap-1.5">
+                                                    <svg viewBox="0 0 20 20" class="h-4 w-4 shrink-0 fill-none stroke-stone-400" stroke-width="1.7" aria-hidden="true">
+                                                        <path d="M4 6.5a2.5 2.5 0 0 1 2.5-2.5h6l3.5 3.5V13.5A2.5 2.5 0 0 1 13.5 16h-7A2.5 2.5 0 0 1 4 13.5v-7Z" />
+                                                        <path d="M12.5 4v3.5H16" />
+                                                    </svg>
+                                                    <span class="sr-only">Marke</span>
+                                                    <span class="truncate">{{ $yarn->brand?->name ?? '—' }}</span>
+                                                </div>
                                             </div>
-                                        </td>
-
-                                    <td class="whitespace-nowrap px-4 py-4 text-right tabular-nums">
-                                        <x-yarn-quantity-stepper :yarn="$yarn" />
+                                            <div class="shrink-0">
+                                                <x-yarn-actions-menu :yarn="$yarn" align="right" />
+                                            </div>
+                                        </div>
                                     </td>
 
-                                    <td class="px-4 py-4">
-                                        <x-yarn-actions-menu :yarn="$yarn" align="right" />
+                                    <td class="whitespace-nowrap px-4 py-3 text-right tabular-nums">
+                                        <x-yarn-quantity-stepper :yarn="$yarn" compact />
                                     </td>
                                 </tr>
                             @endforeach
@@ -313,5 +305,7 @@
                 {{ $yarns->links() }}
             </div>
         @endif
+
+        <x-legal-footer />
     </div>
 </x-app-layout>

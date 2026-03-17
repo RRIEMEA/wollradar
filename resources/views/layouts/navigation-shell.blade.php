@@ -26,13 +26,29 @@
 
 <nav x-data="{ open: false }" class="sticky top-0 z-40 border-b border-stone-200/80 bg-white/85 backdrop-blur">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="flex min-h-[4.5rem] items-center justify-between gap-3 py-3 lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-4">
-            <a href="{{ route('dashboard') }}" class="flex shrink-0 items-center rounded-3xl p-1 transition hover:bg-amber-50 lg:mr-2 lg:border-r lg:border-stone-200/80 lg:pr-4">
+        <div class="flex min-h-[4.5rem] items-center justify-between gap-3 py-3 lg:hidden">
+            <a href="{{ route('dashboard') }}" class="flex shrink-0 items-center rounded-3xl p-1 transition hover:bg-amber-50">
                 <x-application-wordmark class="block h-9 w-auto max-w-[10.5rem] xl:h-10 xl:max-w-[12rem]" />
             </a>
 
-            <div class="hidden lg:block lg:min-w-0">
-                <div class="flex min-w-0 flex-wrap items-center gap-2 px-1 pb-1">
+            <button @click="open = !open"
+                    class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-stone-200 bg-white text-stone-700 shadow-sm transition hover:bg-stone-50 lg:hidden"
+                    :aria-expanded="open.toString()"
+                    aria-label="Navigation umschalten">
+                <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                    <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16" />
+                    <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M18 6L6 18" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="hidden lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-center lg:gap-x-4 lg:gap-y-2 lg:py-3">
+            <a href="{{ route('dashboard') }}" class="row-span-2 flex shrink-0 items-center self-start rounded-3xl p-1 transition hover:bg-amber-50 lg:mr-2 lg:border-r lg:border-stone-200/80 lg:pr-4">
+                <x-application-wordmark class="block h-8 w-auto max-w-[10rem] xl:h-9 xl:max-w-[11rem]" />
+            </a>
+
+            <div class="min-w-0">
+                <div class="flex min-w-0 items-center gap-2 px-1">
                     @foreach($primaryLinks as $link)
                         <a href="{{ route($link['route']) }}"
                            class="{{ $link['active'] ? 'bg-stone-900 text-white shadow-sm' : 'text-stone-600 hover:bg-stone-100 hover:text-stone-900' }} whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition">
@@ -40,23 +56,11 @@
                         </a>
                     @endforeach
                 </div>
-
-                @if(count($secondaryLinks) > 0)
-                    <div class="mt-2 flex min-w-0 flex-wrap items-center gap-2 px-1">
-                        @foreach($secondaryLinks as $link)
-                            <a href="{{ route($link['route']) }}"
-                               class="{{ $link['active'] ? 'border-stone-900 bg-stone-900 text-white shadow-sm' : 'border border-stone-200 bg-white text-stone-600 hover:bg-stone-100 hover:text-stone-900' }} whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-semibold transition">
-                                {{ $link['label'] }}
-                            </a>
-                        @endforeach
-                    </div>
-                @endif
-                </div>
             </div>
 
-            <div class="hidden lg:flex lg:shrink-0 lg:items-center lg:gap-3 lg:border-l lg:border-stone-200/80 lg:pl-4">
+            <div class="flex shrink-0 items-center gap-2 border-l border-stone-200/80 pl-4">
                 <div x-data x-cloak
-                     class="inline-flex min-h-[34px] items-center rounded-full px-2.5 py-1.5 text-[11px] font-semibold"
+                     class="inline-flex min-h-[32px] items-center whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold"
                      :class="$store.pwa && $store.pwa.online ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'">
                     <span class="mr-1.5 inline-block h-2 w-2 rounded-full"
                           :class="$store.pwa && $store.pwa.online ? 'bg-emerald-500' : 'bg-red-500'"></span>
@@ -66,7 +70,7 @@
                 <x-dropdown align="right" width="64" contentClasses="rounded-3xl border border-stone-200 bg-white/95 p-2 shadow-[0_18px_45px_-28px_rgba(28,25,23,0.35)] backdrop-blur">
                     <x-slot name="trigger">
                         <button type="button"
-                                class="inline-flex min-h-[36px] max-w-[11rem] items-center gap-2 rounded-full border border-stone-200 bg-white px-3 py-2 text-sm font-semibold text-stone-700 transition hover:bg-stone-50 hover:text-stone-900">
+                                class="inline-flex min-h-[36px] max-w-[10rem] items-center gap-2 rounded-full border border-stone-200 bg-white px-3 py-2 text-sm font-semibold text-stone-700 transition hover:bg-stone-50 hover:text-stone-900">
                             <span class="truncate">{{ Auth::user()->name }}</span>
                             <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4 shrink-0">
                                 <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.512a.75.75 0 0 1-1.08 0L5.21 8.27a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" />
@@ -104,15 +108,18 @@
                 </x-dropdown>
             </div>
 
-            <button @click="open = !open"
-                    class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-stone-200 bg-white text-stone-700 shadow-sm transition hover:bg-stone-50 lg:hidden"
-                    :aria-expanded="open.toString()"
-                    aria-label="Navigation umschalten">
-                <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                    <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16" />
-                    <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M18 6L6 18" />
-                </svg>
-            </button>
+            @if(count($secondaryLinks) > 0)
+                <div class="col-start-2 col-end-4 min-w-0">
+                    <div class="flex min-w-0 flex-wrap items-center gap-2 px-1 pb-1">
+                        @foreach($secondaryLinks as $link)
+                            <a href="{{ route($link['route']) }}"
+                               class="{{ $link['active'] ? 'border-stone-900 bg-stone-900 text-white shadow-sm' : 'border border-stone-200 bg-white text-stone-600 hover:bg-stone-100 hover:text-stone-900' }} whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-semibold transition">
+                                {{ $link['label'] }}
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 

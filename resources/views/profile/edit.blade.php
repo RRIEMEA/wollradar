@@ -24,6 +24,7 @@
                     @include('profile.partials.delete-user-form')
                 </div>
             </div>
+            <x-legal-footer />
         </div>
     </div>
 </x-app-layout>

@@ -68,5 +68,7 @@
                 </div>
             </form>
         </div>
+
+        <x-legal-footer />
     </div>
 </x-app-layout>

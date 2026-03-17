@@ -65,5 +65,7 @@
                 </ul>
             @endif
         </div>
+
+        <x-legal-footer />
     </div>
 </x-app-layout>

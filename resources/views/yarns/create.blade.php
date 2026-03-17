@@ -33,6 +33,8 @@
                 </div>
             </form>
         </div>
+
+        <x-legal-footer />
     </div>
 
     @include('yarns._quick-add-modals')

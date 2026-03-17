@@ -56,13 +56,13 @@
     }
 
     .app-main {
-        @apply flex-1 px-4 pb-24 pt-6 sm:px-6 lg:px-8;
+        @apply flex-1 px-4 pb-24 pt-3 sm:px-6 lg:px-8;
         padding-bottom: calc(6rem + env(safe-area-inset-bottom));
     }
 
     .app-header {
-        @apply px-4 pb-2 pt-6 sm:px-6 lg:px-8;
-        padding-top: calc(1.25rem + env(safe-area-inset-top));
+        @apply px-4 pb-1 pt-3 sm:px-6 lg:px-8;
+        padding-top: calc(.75rem + env(safe-area-inset-top));
     }
 
     .app-section {

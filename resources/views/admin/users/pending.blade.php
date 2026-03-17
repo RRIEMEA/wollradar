@@ -269,5 +269,7 @@
                 @endif
             </div>
         </div>
+
+        <x-legal-footer />
     </div>
 </x-app-layout>

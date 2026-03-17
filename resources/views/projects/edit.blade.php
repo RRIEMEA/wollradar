@@ -101,5 +101,7 @@
                 </button>
             </form>
         </div>
+
+        <x-legal-footer />
     </div>
 </x-app-layout>
